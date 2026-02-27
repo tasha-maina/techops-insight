@@ -3,6 +3,7 @@ from config import Config
 from .extensions import db, jwt, migrate, bcrypt
 from .auth.routes import auth_bp
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from .customers.routes import customers_bp
 
 def create_app():
     app = Flask(__name__)
@@ -14,13 +15,14 @@ def create_app():
     bcrypt.init_app(app)
 
     app.register_blueprint(auth_bp)
-
+    app.register_blueprint(customers_bp)
+    
     from . import models
 
     @app.route("/")
     def home():
         return {"message": "TechOps Insight API is running 🚀"}
-    
+
 
     @app.route("/protected")
     @jwt_required()
