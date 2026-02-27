@@ -2,7 +2,7 @@ from flask import Flask
 from config import Config
 from .extensions import db, jwt, migrate, bcrypt
 from .auth.routes import auth_bp
-
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 def create_app():
     app = Flask(__name__)
@@ -20,8 +20,7 @@ def create_app():
     @app.route("/")
     def home():
         return {"message": "TechOps Insight API is running 🚀"}
-
-    from flask_jwt_extended import jwt_required, get_jwt_identity
+    
 
     @app.route("/protected")
     @jwt_required()
