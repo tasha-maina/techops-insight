@@ -191,6 +191,6 @@ python run.py
 
 ## 👩🏽‍💻 Author
 
-Tasha Maina  
+Natasha Maina  
 Full Stack Developer  
 GitHub: https://github.com/tasha-maina
