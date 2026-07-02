@@ -47,7 +47,7 @@ class Transaction(db.Model):
         nullable=False
     )
 
-    amount = db.Column(db.Float, nullable=False)
+    amount = db.Column(db.Numeric(12, 2), nullable=False)
     phone_number = db.Column(db.String(20), nullable=False)
 
     mpesa_receipt = db.Column(db.String(100), nullable=True)

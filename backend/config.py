@@ -13,4 +13,17 @@ class Config:
     DARAJA_BASE_URL = os.getenv("DARAJA_BASE_URL")
     DARAJA_SHORTCODE = os.getenv("DARAJA_SHORTCODE")
     DARAJA_PASSKEY = os.getenv("DARAJA_PASSKEY")
-    DARAJA_CALLBACK_URL = os.getenv("DARAJA_CALLBACK_URL")  
+    DARAJA_CALLBACK_URL = os.getenv("DARAJA_CALLBACK_URL")
+
+    @classmethod
+    def require_core_vars(cls):
+        required = [
+            "DATABASE_URL",
+            "SECRET_KEY",
+            "JWT_SECRET_KEY"
+        ]
+        missing = [env for env in required if os.getenv(env) is None]
+        if missing:
+            raise RuntimeError(
+                f"Missing required environment variables: {', '.join(missing)}"
+            )

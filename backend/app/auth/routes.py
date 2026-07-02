@@ -13,6 +13,9 @@ auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 def register():
     data = request.get_json()
 
+    if data is None:
+        return jsonify({"error": "Invalid or missing JSON body"}), 400
+
     username = data.get("username")
     email = data.get("email")
     password = data.get("password")
@@ -47,6 +50,9 @@ def register():
 @auth_bp.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
+
+    if data is None:
+        return jsonify({"error": "Invalid or missing JSON body"}), 400
 
     email = data.get("email")
     password = data.get("password")

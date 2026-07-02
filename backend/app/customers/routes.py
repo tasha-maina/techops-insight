@@ -12,6 +12,9 @@ customers_bp = Blueprint("customers", __name__, url_prefix="/customers")
 def create_customer():
     data = request.get_json()
 
+    if data is None:
+        return jsonify({"error": "Invalid or missing JSON body"}), 400
+
     company_name = data.get("company_name")
     contact_email = data.get("contact_email")
 
@@ -64,6 +67,9 @@ def get_customer(customer_id):
 def update_customer(customer_id):
     customer = Customer.query.get_or_404(customer_id)
     data = request.get_json()
+
+    if data is None:
+        return jsonify({"error": "Invalid or missing JSON body"}), 400
 
     customer.company_name = data.get("company_name", customer.company_name)
     customer.contact_email = data.get("contact_email", customer.contact_email)

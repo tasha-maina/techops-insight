@@ -4,13 +4,21 @@ from flask import current_app
 from datetime import datetime
 
 
+# -----------------------------
+# 1. GET ACCESS TOKEN
+# -----------------------------
+def _get_required_config(key):
+    value = current_app.config.get(key)
+    if not value:
+        raise RuntimeError(f"Missing required payment config: {key}")
+    return value
+
 
 def get_access_token():
-    consumer_key = current_app.config["DARAJA_CONSUMER_KEY"]
-    consumer_secret = current_app.config["DARAJA_CONSUMER_SECRET"]
-    base_url = current_app.config["DARAJA_BASE_URL"]
+    consumer_key = _get_required_config("DARAJA_CONSUMER_KEY")
+    consumer_secret = _get_required_config("DARAJA_CONSUMER_SECRET")
+    base_url = _get_required_config("DARAJA_BASE_URL")
 
-    # Create base64 credentials
     credentials = f"{consumer_key}:{consumer_secret}"
     encoded_credentials = base64.b64encode(credentials.encode()).decode()
 
@@ -22,11 +30,27 @@ def get_access_token():
 
     response = requests.get(url, headers=headers)
 
-    return response.json()
+    print("----------- TOKEN RESPONSE -----------")
+    print("STATUS:", response.status_code)
+    print("TEXT:", response.text)
 
+    data = response.json()
+
+    if "access_token" not in data:
+        raise Exception(f"Failed to get access token: {data}")
+
+    return data["access_token"]
+
+
+# -----------------------------
+# 2. GENERATE STK PASSWORD
+# -----------------------------
 def generate_stk_password():
-    shortcode = current_app.config["DARAJA_SHORTCODE"]
-    passkey = current_app.config["DARAJA_PASSKEY"]
+    shortcode = _get_required_config("DARAJA_SHORTCODE")
+    passkey = _get_required_config("DARAJA_PASSKEY")
+
+    print("SHORTCODE:", current_app.config["DARAJA_SHORTCODE"])
+    print("PASSKEY:", current_app.config["DARAJA_PASSKEY"])
 
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
 
@@ -38,16 +62,20 @@ def generate_stk_password():
         "password": encoded_password
     }
 
+
+# -----------------------------
+# 3. INITIATE STK PUSH
+# -----------------------------
 def initiate_stk_push(phone, amount):
-    base_url = current_app.config["DARAJA_BASE_URL"]
-    shortcode = current_app.config["DARAJA_SHORTCODE"]
-    callback_url = current_app.config["DARAJA_CALLBACK_URL"]
 
-    # Get access token
-    token_response = get_access_token()
-    access_token = token_response.get("access_token")
+    base_url = _get_required_config("DARAJA_BASE_URL")
+    shortcode = _get_required_config("DARAJA_SHORTCODE")
+    callback_url = _get_required_config("DARAJA_CALLBACK_URL")
 
-    # Generate password + timestamp
+    # Get OAuth token
+    access_token = get_access_token()
+
+    # Generate password
     stk_data = generate_stk_password()
     password = stk_data["password"]
     timestamp = stk_data["timestamp"]
@@ -73,6 +101,27 @@ def initiate_stk_push(phone, amount):
         "TransactionDesc": "Payment"
     }
 
-    response = requests.post(url, json=payload, headers=headers)
+    response = requests.post(
+        url,
+        json=payload,
+        headers=headers,
+        timeout=90
+    )
 
-    return response.json()
+    print("----------- STK REQUEST -----------")
+    print("URL:", url)
+    print("PAYLOAD:", payload)
+    print("HEADERS:", headers)
+
+    print("----------- STK RESPONSE -----------")
+    print("STATUS:", response.status_code)
+    print("TEXT:", response.text)
+
+    try:
+        return response.json()
+    except Exception:
+        return {
+            "error": "Invalid JSON response",
+            "status_code": response.status_code,
+            "raw_response": response.text
+        }
