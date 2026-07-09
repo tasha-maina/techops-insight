@@ -8,6 +8,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from .customers.routes import customers_bp
 from .payments.routes import payments_bp
 from .analytics.routes import analytics_bp
+from .subscriptions.routes import subscriptions_bp
 
 # Load environment variables from .env
 load_dotenv()
@@ -31,6 +32,7 @@ def create_app(test_config=None):
     app.register_blueprint(customers_bp)
     app.register_blueprint(payments_bp)
     app.register_blueprint(analytics_bp)
+    app.register_blueprint(subscriptions_bp)
 
     from . import models
 

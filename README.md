@@ -42,6 +42,14 @@ DARAJA_BASE_URL=https://sandbox.safaricom.co.ke
 DARAJA_SHORTCODE=123456
 DARAJA_PASSKEY=your-passkey
 DARAJA_CALLBACK_URL=https://yourdomain.com/payments/callback
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USERNAME=smtp-user
+SMTP_PASSWORD=smtp-password
+SMTP_USE_TLS=true
+EMAIL_FROM=notifications@example.com
+ADMIN_EMAIL=admin@example.com
+EMAIL_ENABLED=true
 ```
 
 4. Run database migrations:
@@ -87,6 +95,10 @@ http://127.0.0.1:5001/
 
 ### Analytics
 - `GET /analytics/summary`
+- `GET /analytics/admin` (Admin only)
+
+### Subscriptions
+- `POST /subscriptions/renewals/process` (Admin only)
 
 ## 🧪 Tests
 
@@ -110,31 +122,6 @@ techops-insight/
 └── frontend/
     └── index.html
 ```
-
-cd techops-insight/backend
-
-
-2. Create virtual environment
-
-python3 -m venv venv
-source venv/bin/activate
-
-
-3. Install dependencies
-
-pip install -r requirements.txt
-
-
-4. Configure PostgreSQL database in `config.py`
-
-5. Run migrations
-
-flask db upgrade
-
-
-6. Start server
-
-python run.py
 
 ## 💰 M-Pesa Integration Architecture (Design Overview)
 
@@ -174,4 +161,3 @@ python run.py
 Natasha Maina  
 Full Stack Developer  
 GitHub: https://github.com/tasha-maina
->>>>>>> origin/main

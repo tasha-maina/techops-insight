@@ -32,6 +32,8 @@ class Customer(db.Model):
         default="inactive"
     )
 
+    next_renewal_date = db.Column(db.DateTime, nullable=True)
+
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):

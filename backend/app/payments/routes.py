@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
 from ..extensions import db
@@ -92,6 +94,7 @@ def stk_callback():
             if transaction.customer:
                 transaction.customer.subscription_status = "active"
                 transaction.customer.status = "active"
+                transaction.customer.next_renewal_date = datetime.utcnow() + timedelta(days=30)
         else:
             transaction.status = "failed"
         db.session.commit()
