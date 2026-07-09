@@ -1,8 +1,21 @@
-# TechOps Insight Backend
+# 🚀 TechOps Insight
 
-This repository contains the backend API for TechOps Insight, a Flask application that manages users, customers, and M-Pesa payment transactions.
+TechOps Insight is a customer operations dashboard with secure authentication, customer management, M-Pesa payment integration, and analytics.
 
-## Setup
+This repository contains a Flask backend API and a static frontend served from the root-level `frontend/` directory.
+
+## 🧩 What’s included
+
+- Backend API in `backend/`
+- Static frontend in `frontend/`
+- JWT authentication
+- Customer CRUD operations
+- M-Pesa Daraja STK Push payment flows
+- Transaction persistence and callback handling
+- Analytics summary endpoint
+- Unit tests for backend behavior
+
+## ⚙️ Setup
 
 1. Create a virtual environment and activate it:
 
@@ -11,13 +24,13 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-2. Install dependencies:
+2. Install backend dependencies:
 
 ```bash
 pip install -r backend/requirements.txt
 ```
 
-3. Create a `.env` file in the `backend` folder with the required variables:
+3. Create `backend/.env` with:
 
 ```env
 DATABASE_URL=postgresql://user:password@localhost/dbname
@@ -38,48 +51,127 @@ cd backend
 flask db upgrade
 ```
 
-5. Start the application from the repository root:
+5. Start the app from the repository root:
 
 ```bash
 cd /home/dmintasha/techops-insight
 .venv/bin/python backend/run.py
 ```
 
-Then open the UI in your browser:
+6. Open the frontend in your browser:
 
 ```text
 http://127.0.0.1:5001/
 ```
 
-## API Endpoints
+## 📚 API Endpoints
 
 ### Auth
-- `POST /auth/register` — register a new user
-- `POST /auth/login` — log in and receive a JWT access token
+- `POST /auth/register`
+- `POST /auth/login`
 
 ### Customers
-- `POST /customers` — create a customer (JWT required)
-- `GET /customers` — list customers (JWT required)
-- `GET /customers/<id>` — get a customer
-- `PUT /customers/<id>` — update a customer
-- `DELETE /customers/<id>` — delete a customer (admin only)
+- `GET /customers`
+- `POST /customers`
+- `GET /customers/<id>`
+- `PUT /customers/<id>`
+- `DELETE /customers/<id>`
 
 ### Payments
-- `GET /payments/health` — check payments module readiness
-- `GET /payments/token` — generate Daraja access token (JWT required)
-- `GET /payments/test-password` — generate STK password (JWT required)
-- `GET /payments/transactions` — list transaction records (JWT required)
-- `POST /payments/stk-push` — initiate an STK push payment (JWT required)
-- `POST /payments/callback` — receive Daraja callback events
+- `GET /payments/health`
+- `GET /payments/token`
+- `GET /payments/test-password`
+- `GET /payments/transactions`
+- `POST /payments/stk-push`
+- `POST /payments/callback`
 
 ### Analytics
-- `GET /analytics/summary` — get customer and transaction summary metrics (JWT required)
+- `GET /analytics/summary`
 
-## Tests
+## 🧪 Tests
 
-Run tests with:
+Run backend tests from the repository root:
 
 ```bash
 cd backend
 python -m unittest discover tests
 ```
+
+## 📁 Project Layout
+
+```
+techops-insight/
+├── backend/
+│   ├── app/
+│   ├── migrations/
+│   ├── config.py
+│   ├── requirements.txt
+│   └── run.py
+└── frontend/
+    └── index.html
+```
+
+cd techops-insight/backend
+
+
+2. Create virtual environment
+
+python3 -m venv venv
+source venv/bin/activate
+
+
+3. Install dependencies
+
+pip install -r requirements.txt
+
+
+4. Configure PostgreSQL database in `config.py`
+
+5. Run migrations
+
+flask db upgrade
+
+
+6. Start server
+
+python run.py
+
+## 💰 M-Pesa Integration Architecture (Design Overview)
+
+1. User initiates payment from frontend
+2. Backend generates OAuth token (Daraja)
+3. Backend sends STK Push request
+4. User receives payment prompt on phone
+5. Safaricom sends callback to backend
+6. Backend verifies transaction
+7. Subscription status updated in database
+
+## 🧠 Engineering Principles Demonstrated
+
+- Modular Flask architecture
+- App factory pattern
+- Blueprint separation
+- JWT identity & custom claims
+- Role-based route enforcement
+- RESTful API design
+- PostgreSQL migrations
+- External API integration (Daraja)
+- Secure credential handling
+- Environment-based configuration
+
+## 🚀 Future Enhancements
+
+- Docker containerization
+- CI/CD with GitHub Actions
+- Deployment to cloud (Render / Railway)
+- Unit and integration tests
+- Email notifications
+- Admin analytics dashboard
+- Subscription renewal automation
+
+## 👩🏽‍💻 Author
+
+Natasha Maina  
+Full Stack Developer  
+GitHub: https://github.com/tasha-maina
+>>>>>>> origin/main
