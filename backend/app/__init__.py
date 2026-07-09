@@ -10,11 +10,14 @@ from .payments.routes import payments_bp
 # Load environment variables from .env
 load_dotenv()
 
-def create_app():
-    Config.require_core_vars()
-
+def create_app(test_config=None):
     app = Flask(__name__)
-    app.config.from_object(Config)
+
+    if test_config is not None:
+        app.config.from_mapping(test_config)
+    else:
+        Config.require_core_vars()
+        app.config.from_object(Config)
 
     db.init_app(app)
     jwt.init_app(app)

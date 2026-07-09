@@ -35,8 +35,6 @@ def create_customer():
 @customers_bp.route("", methods=["GET"])
 @jwt_required()
 def get_customers():
-    claims = get_jwt()
-    print("JWT CLAIMS:", claims)
     customers = Customer.query.all()
 
     result = []
@@ -45,7 +43,8 @@ def get_customers():
             "id": customer.id,
             "company_name": customer.company_name,
             "contact_email": customer.contact_email,
-            "status": customer.status
+            "status": customer.status,
+            "subscription_status": customer.subscription_status
         })
 
     return jsonify(result), 200
@@ -59,7 +58,8 @@ def get_customer(customer_id):
         "id": customer.id,
         "company_name": customer.company_name,
         "contact_email": customer.contact_email,
-        "status": customer.status
+        "status": customer.status,
+        "subscription_status": customer.subscription_status
     }), 200
 
 @customers_bp.route("/<int:customer_id>", methods=["PUT"])
@@ -74,6 +74,10 @@ def update_customer(customer_id):
     customer.company_name = data.get("company_name", customer.company_name)
     customer.contact_email = data.get("contact_email", customer.contact_email)
     customer.status = data.get("status", customer.status)
+    customer.subscription_status = data.get(
+        "subscription_status",
+        customer.subscription_status
+    )
 
     db.session.commit()
 

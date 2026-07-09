@@ -29,14 +29,10 @@ def get_access_token():
     }
 
     response = requests.get(url, headers=headers)
-
-    print("----------- TOKEN RESPONSE -----------")
-    print("STATUS:", response.status_code)
-    print("TEXT:", response.text)
-
     data = response.json()
 
     if "access_token" not in data:
+        current_app.logger.error("Failed to get access token: %s", data)
         raise Exception(f"Failed to get access token: {data}")
 
     return data["access_token"]
@@ -49,11 +45,7 @@ def generate_stk_password():
     shortcode = _get_required_config("DARAJA_SHORTCODE")
     passkey = _get_required_config("DARAJA_PASSKEY")
 
-    print("SHORTCODE:", current_app.config["DARAJA_SHORTCODE"])
-    print("PASSKEY:", current_app.config["DARAJA_PASSKEY"])
-
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-
     data_to_encode = f"{shortcode}{passkey}{timestamp}"
     encoded_password = base64.b64encode(data_to_encode.encode()).decode()
 
@@ -101,27 +93,25 @@ def initiate_stk_push(phone, amount):
         "TransactionDesc": "Payment"
     }
 
-    response = requests.post(
-        url,
-        json=payload,
-        headers=headers,
-        timeout=90
-    )
-
-    print("----------- STK REQUEST -----------")
-    print("URL:", url)
-    print("PAYLOAD:", payload)
-    print("HEADERS:", headers)
-
-    print("----------- STK RESPONSE -----------")
-    print("STATUS:", response.status_code)
-    print("TEXT:", response.text)
-
     try:
+        response = requests.post(
+            url,
+            json=payload,
+            headers=headers,
+            timeout=90
+        )
+        response.raise_for_status()
         return response.json()
-    except Exception:
+    except requests.RequestException as exc:
+        current_app.logger.error("STK Push request failed: %s", exc)
+        if hasattr(exc, 'response') and exc.response is not None:
+            return {
+                "error": "Failed to initiate STK push",
+                "status_code": exc.response.status_code,
+                "raw_response": exc.response.text,
+                "details": str(exc)
+            }
         return {
-            "error": "Invalid JSON response",
-            "status_code": response.status_code,
-            "raw_response": response.text
+            "error": "Failed to initiate STK push",
+            "details": str(exc)
         }
