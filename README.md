@@ -123,7 +123,7 @@ techops-insight/
     └── index.html
 ```
 
-## 💰 M-Pesa Integration Architecture (Design Overview)
+##  M-Pesa Integration Architecture (Design Overview)
 
 1. User initiates payment from frontend
 2. Backend generates OAuth token (Daraja)
@@ -151,9 +151,7 @@ techops-insight/
 - Docker containerization
 - CI/CD with GitHub Actions
 - Unit and integration tests
-- Email notifications
-- Admin analytics dashboard
-- Subscription renewal automation
+
 
 ## Author
 
