@@ -38,10 +38,17 @@ cd backend
 flask db upgrade
 ```
 
-5. Start the application:
+5. Start the application from the repository root:
 
 ```bash
-python run.py
+cd /home/dmintasha/techops-insight
+.venv/bin/python backend/run.py
+```
+
+Then open the UI in your browser:
+
+```text
+http://127.0.0.1:5001/
 ```
 
 ## API Endpoints
@@ -64,6 +71,9 @@ python run.py
 - `GET /payments/transactions` — list transaction records (JWT required)
 - `POST /payments/stk-push` — initiate an STK push payment (JWT required)
 - `POST /payments/callback` — receive Daraja callback events
+
+### Analytics
+- `GET /analytics/summary` — get customer and transaction summary metrics (JWT required)
 
 ## Tests
 
