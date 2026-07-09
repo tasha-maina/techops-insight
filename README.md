@@ -1,10 +1,10 @@
-# 🚀 TechOps Insight
+#  TechOps Insight
 
 TechOps Insight is a customer operations dashboard with secure authentication, customer management, M-Pesa payment integration, and analytics.
 
 This repository contains a Flask backend API and a static frontend served from the root-level `frontend/` directory.
 
-## 🧩 What’s included
+## What’s included
 
 - Backend API in `backend/`
 - Static frontend in `frontend/`
@@ -15,7 +15,7 @@ This repository contains a Flask backend API and a static frontend served from t
 - Analytics summary endpoint
 - Unit tests for backend behavior
 
-## ⚙️ Setup
+##  Setup
 
 1. Create a virtual environment and activate it:
 
@@ -64,7 +64,7 @@ cd /home/dmintasha/techops-insight
 http://127.0.0.1:5001/
 ```
 
-## 📚 API Endpoints
+##  API Endpoints
 
 ### Auth
 - `POST /auth/register`
@@ -88,7 +88,7 @@ http://127.0.0.1:5001/
 ### Analytics
 - `GET /analytics/summary`
 
-## 🧪 Tests
+##  Tests
 
 Run backend tests from the repository root:
 
@@ -97,7 +97,7 @@ cd backend
 python -m unittest discover tests
 ```
 
-## 📁 Project Layout
+##  Project Layout
 
 ```
 techops-insight/
@@ -136,7 +136,7 @@ flask db upgrade
 
 python run.py
 
-## 💰 M-Pesa Integration Architecture (Design Overview)
+##  M-Pesa Integration Architecture (Design Overview)
 
 1. User initiates payment from frontend
 2. Backend generates OAuth token (Daraja)
@@ -146,7 +146,7 @@ python run.py
 6. Backend verifies transaction
 7. Subscription status updated in database
 
-## 🧠 Engineering Principles Demonstrated
+##  Engineering Principles Demonstrated
 
 - Modular Flask architecture
 - App factory pattern
@@ -159,17 +159,16 @@ python run.py
 - Secure credential handling
 - Environment-based configuration
 
-## 🚀 Future Enhancements
+##  Future Enhancements
 
 - Docker containerization
 - CI/CD with GitHub Actions
-- Deployment to cloud (Render / Railway)
 - Unit and integration tests
 - Email notifications
 - Admin analytics dashboard
 - Subscription renewal automation
 
-## 👩🏽‍💻 Author
+## Author
 
 Natasha Maina  
 Full Stack Developer  
