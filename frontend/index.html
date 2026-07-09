@@ -5,26 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TechOps Insight</title>
     <style>
-      body { font-family: system-ui, sans-serif; margin: 0; padding: 0; background: #f5f7fb; color: #102a43; }
-      .app { max-width: 980px; margin: 0 auto; padding: 24px; }
-      header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-      header h1 { margin: 0; font-size: 1.8rem; }
-      button { padding: 10px 18px; border: 0; border-radius: 8px; background: #2563eb; color: white; cursor: pointer; }
-      button:disabled { background: #94a3b8; cursor: not-allowed; }
-      .grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-      .card { background: white; border-radius: 16px; padding: 18px; box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08); }
-      label { display: block; margin-bottom: 8px; font-weight: 600; }
-      input, select { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; margin-bottom: 14px; }
-      textarea { width: 100%; min-height: 120px; border: 1px solid #d1d5db; border-radius: 8px; padding: 10px 12px; }
+      :root {
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #0f172a;
+        background: #f8fafc;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%); }
+
+      .app { max-width: 1200px; margin: 0 auto; padding: 28px 20px; }
+      header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 24px; }
+      header h1 { margin: 0; font-size: 2.2rem; line-height: 1.1; }
+      header p { margin: 8px 0 0; color: #475569; max-width: 640px; }
+
+      .button, button { border: 0; border-radius: 999px; padding: 12px 20px; background: #4338ca; color: #fff; cursor: pointer; font-weight: 700; transition: transform 180ms ease, background-color 180ms ease; }
+      .button:hover, button:hover { transform: translateY(-1px); background: #3730a3; }
+      .button.secondary { background: #64748b; }
+      .button.secondary:hover { background: #475569; }
+
       .hidden { display: none; }
-      .error { color: #b91c1c; font-size: 0.95rem; margin-top: 8px; }
-      .table { width: 100%; border-collapse: collapse; }
-      .table th, .table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e2e8f0; }
-      .table th { color: #475569; font-weight: 700; }
-      .status-pill { display: inline-flex; align-items: center; gap: 8px; padding: 4px 10px; border-radius: 999px; font-size: 0.85rem; font-weight: 700; }
+      .grid { display: grid; gap: 22px; }
+      .card { background: #fff; border-radius: 24px; padding: 24px; box-shadow: 0 22px 60px rgba(15, 23, 42, 0.08); }
+      .panel-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+      .panel-header h2 { margin: 0; font-size: 1.2rem; }
+      .form-control { display: grid; gap: 10px; margin-bottom: 16px; }
+      label { color: #334155; font-size: 0.95rem; font-weight: 700; }
+      input, select { width: 100%; border: 1px solid #cbd5e1; border-radius: 16px; padding: 12px 14px; font-size: 1rem; color: #0f172a; background: #f8fafc; }
+      input:focus, select:focus { outline: 2px solid #c7d2fe; border-color: #c7d2fe; }
+
+      .status-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; font-size: 0.85rem; font-weight: 700; }
       .status-success { background: #dcfce7; color: #166534; }
       .status-pending { background: #fef3c7; color: #92400e; }
       .status-failed { background: #fee2e2; color: #991b1b; }
+
+      .error { color: #b91c1c; margin-top: 10px; font-size: 0.95rem; }
+      .table-wrapper { overflow-x: auto; }
+      .table { width: 100%; border-collapse: collapse; }
+      .table th, .table td { text-align: left; padding: 14px 14px; border-bottom: 1px solid #e2e8f0; }
+      .table th { color: #475569; font-weight: 700; }
+      .table tbody tr:hover { background: #f8fafc; }
+
+      .overview-grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-top: 14px; }
+      .metric-card { background: #f8fafc; border-radius: 20px; padding: 20px; }
+      .metric-card strong { display: block; margin-bottom: 12px; color: #0f172a; }
+      .metric-card span { font-size: 1.8rem; font-weight: 800; }
+
+      footer { text-align: center; margin: 32px 0 0; color: #64748b; }
+
+      @media (max-width: 840px) {
+        .app { padding: 18px 14px; }
+        .card { padding: 20px; }
+        header { flex-direction: column; align-items: stretch; }
+      }
     </style>
   </head>
   <body>
@@ -32,88 +65,130 @@
       <header>
         <div>
           <h1>TechOps Insight</h1>
-          <p>Customer + payments dashboard</p>
+          <p>Use this dashboard to manage customers, initiate M-Pesa STK payments, and track performance in one place.</p>
         </div>
-        <button id="logoutBtn" class="hidden">Logout</button>
+        <button id="logoutBtn" class="hidden button secondary">Logout</button>
       </header>
 
-      <div id="authSection" class="grid">
+      <div id="authSection" class="grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
         <div class="card">
-          <h2>Login</h2>
-          <label>Email</label>
-          <input type="email" id="loginEmail" />
-          <label>Password</label>
-          <input type="password" id="loginPassword" />
-          <button id="loginBtn">Login</button>
+          <div class="panel-header">
+            <h2>Login</h2>
+          </div>
+          <div class="form-control">
+            <label for="loginEmail">Email</label>
+            <input id="loginEmail" type="email" placeholder="name@example.com" />
+          </div>
+          <div class="form-control">
+            <label for="loginPassword">Password</label>
+            <input id="loginPassword" type="password" placeholder="••••••••" />
+          </div>
+          <button id="loginBtn" class="button">Login</button>
           <p class="error" id="loginError"></p>
         </div>
         <div class="card">
-          <h2>Register</h2>
-          <label>Username</label>
-          <input type="text" id="registerUsername" />
-          <label>Email</label>
-          <input type="email" id="registerEmail" />
-          <label>Password</label>
-          <input type="password" id="registerPassword" />
-          <button id="registerBtn">Register</button>
+          <div class="panel-header">
+            <h2>Register</h2>
+          </div>
+          <div class="form-control">
+            <label for="registerUsername">Username</label>
+            <input id="registerUsername" type="text" placeholder="ops-team" />
+          </div>
+          <div class="form-control">
+            <label for="registerEmail">Email</label>
+            <input id="registerEmail" type="email" placeholder="name@example.com" />
+          </div>
+          <div class="form-control">
+            <label for="registerPassword">Password</label>
+            <input id="registerPassword" type="password" placeholder="••••••••" />
+          </div>
+          <button id="registerBtn" class="button">Register</button>
           <p class="error" id="registerError"></p>
         </div>
       </div>
 
       <div id="mainSection" class="hidden">
-        <div class="grid">
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
           <div class="card">
-            <h2>Customer actions</h2>
-            <label>Company name</label>
-            <input type="text" id="customerName" />
-            <label>Contact email</label>
-            <input type="email" id="customerEmail" />
-            <button id="createCustomerBtn">Create customer</button>
+            <div class="panel-header">
+              <h2>New customer</h2>
+            </div>
+            <div class="form-control">
+              <label for="customerName">Company name</label>
+              <input id="customerName" type="text" placeholder="Acme Ltd." />
+            </div>
+            <div class="form-control">
+              <label for="customerEmail">Contact email</label>
+              <input id="customerEmail" type="email" placeholder="contact@acme.com" />
+            </div>
+            <button id="createCustomerBtn" class="button">Create customer</button>
             <p class="error" id="customerError"></p>
           </div>
           <div class="card">
-            <h2>Payment</h2>
-            <label>Customer ID</label>
-            <input type="number" id="paymentCustomerId" />
-            <label>Phone</label>
-            <input type="text" id="paymentPhone" />
-            <label>Amount</label>
-            <input type="number" step="0.01" id="paymentAmount" />
-            <button id="payBtn">Send STK Push</button>
+            <div class="panel-header">
+              <h2>Send payment</h2>
+            </div>
+            <div class="form-control">
+              <label for="paymentCustomerId">Customer ID</label>
+              <input id="paymentCustomerId" type="number" placeholder="1" />
+            </div>
+            <div class="form-control">
+              <label for="paymentPhone">Phone</label>
+              <input id="paymentPhone" type="text" placeholder="254700000000" />
+            </div>
+            <div class="form-control">
+              <label for="paymentAmount">Amount</label>
+              <input id="paymentAmount" type="number" step="0.01" placeholder="100.00" />
+            </div>
+            <button id="payBtn" class="button">Send STK Push</button>
             <p class="error" id="paymentError"></p>
           </div>
         </div>
 
-        <div class="grid">
-          <div class="card">
-            <h2>Customers</h2>
-            <table class="table" id="customersTable">
-              <thead>
-                <tr><th>ID</th><th>Name</th><th>Email</th><th>Status</th><th>Subscription</th></tr>
-              </thead>
-              <tbody></tbody>
-            </table>
+        <div class="card">
+          <div class="panel-header">
+            <h2>Analytics summary</h2>
           </div>
-          <div class="card">
-            <h2>Analytics</h2>
-            <div id="analyticsSummary"></div>
-          </div>
+          <div class="overview-grid" id="analyticsSummary"></div>
         </div>
 
-        <div class="card">
-          <h2>Transactions</h2>
-          <table class="table" id="transactionsTable">
-            <thead>
-              <tr><th>ID</th><th>Customer</th><th>Amount</th><th>Phone</th><th>Status</th><th>Receipt</th></tr>
-            </thead>
-            <tbody></tbody>
-          </table>
+        <div class="grid" style="grid-template-columns: 1.3fr 0.7fr; gap: 22px;">
+          <div class="card">
+            <div class="panel-header">
+              <h2>Customers</h2>
+            </div>
+            <div class="table-wrapper">
+              <table class="table">
+                <thead>
+                  <tr><th>ID</th><th>Company</th><th>Email</th><th>Status</th><th>Subscription</th></tr>
+                </thead>
+                <tbody id="customersTable"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="panel-header">
+              <h2>Recent transactions</h2>
+            </div>
+            <div class="table-wrapper">
+              <table class="table">
+                <thead>
+                  <tr><th>ID</th><th>Customer</th><th>Amount</th><th>Status</th></tr>
+                </thead>
+                <tbody id="transactionsTable"></tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
+
+      <footer class="footer">
+        TechOps Insight · Backend + UI in one repo
+      </footer>
     </div>
 
     <script>
-      const apiBase = window.location.origin.replace('/frontend', '');
+      const apiBase = window.location.origin;
       let token = localStorage.getItem('techops_token');
 
       const authSection = document.getElementById('authSection');
@@ -121,7 +196,6 @@
       const logoutBtn = document.getElementById('logoutBtn');
 
       const setError = (id, message) => document.getElementById(id).textContent = message;
-
       const authHeaders = () => ({
         'Content-Type': 'application/json',
         Authorization: token ? `Bearer ${token}` : ''
@@ -135,8 +209,9 @@
       };
 
       const fetchJson = async (path, options = {}) => {
-        const res = await fetch(`${apiBase}${path}`, options);
-        return { ok: res.ok, status: res.status, data: await res.json() };
+        const response = await fetch(`${apiBase}${path}`, options);
+        const data = await response.json().catch(() => ({}));
+        return { ok: response.ok, status: response.status, data };
       };
 
       const login = async () => {
@@ -173,8 +248,7 @@
       const loadCustomers = async () => {
         const response = await fetchJson('/customers', { headers: authHeaders() });
         if (!response.ok) return;
-        const tbody = document.querySelector('#customersTable tbody');
-        tbody.innerHTML = response.data.map(customer => `
+        document.getElementById('customersTable').innerHTML = response.data.map(customer => `
           <tr>
             <td>${customer.id}</td>
             <td>${customer.company_name}</td>
@@ -188,15 +262,12 @@
       const loadTransactions = async () => {
         const response = await fetchJson('/payments/transactions', { headers: authHeaders() });
         if (!response.ok) return;
-        const tbody = document.querySelector('#transactionsTable tbody');
-        tbody.innerHTML = response.data.map(tx => `
+        document.getElementById('transactionsTable').innerHTML = response.data.map(tx => `
           <tr>
             <td>${tx.id}</td>
             <td>${tx.customer_id}</td>
             <td>${tx.amount}</td>
-            <td>${tx.phone_number}</td>
             <td><span class="status-pill status-${tx.status}">${tx.status}</span></td>
-            <td>${tx.mpesa_receipt || '—'}</td>
           </tr>
         `).join('');
       };
@@ -206,12 +277,12 @@
         if (!response.ok) return;
         const summary = response.data;
         document.getElementById('analyticsSummary').innerHTML = `
-          <p><strong>Total customers:</strong> ${summary.total_customers}</p>
-          <p><strong>Active customers:</strong> ${summary.active_customers}</p>
-          <p><strong>Subscription active:</strong> ${summary.subscription_active}</p>
-          <p><strong>Successful payments:</strong> ${summary.successful_transactions}</p>
-          <p><strong>Pending payments:</strong> ${summary.pending_transactions}</p>
-          <p><strong>Successful amount:</strong> ${summary.successful_amount}</p>
+          <div class="metric-card"><strong>Total customers</strong><span>${summary.total_customers}</span></div>
+          <div class="metric-card"><strong>Active customers</strong><span>${summary.active_customers}</span></div>
+          <div class="metric-card"><strong>Subscription active</strong><span>${summary.subscription_active}</span></div>
+          <div class="metric-card"><strong>Successful payments</strong><span>${summary.successful_transactions}</span></div>
+          <div class="metric-card"><strong>Pending payments</strong><span>${summary.pending_transactions}</span></div>
+          <div class="metric-card"><strong>Successful amount</strong><span>${summary.successful_amount}</span></div>
         `;
       };
 
